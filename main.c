@@ -35,8 +35,12 @@ int main(){
     add_entry(&head, 109);
     add_entry(&head, 110);
     add_entry(&head, 111);
+    add_entry(&head, 2);
+    add_entry(&head, 1);
+    add_entry(&head, 18);
+    add_entry(&head, 19);
+    add_entry(&head, 113);
 
-    print_list(head);
 
     node_t *entry = find_entry(head, 101);
     remove_entry(&head, entry);
@@ -44,13 +48,11 @@ int main(){
     entry = find_entry(head, 111);
     remove_entry(&head, entry);
 
-    print_list(head);
+    
 
     swap_pair(&head);
-    print_list(head);
 
     reverse(&head);
-    print_list(head);
 
     reverse_recur(&head);
     print_list(head);
@@ -134,44 +136,43 @@ void random_sort(node_t **head){
 
     srand(time(NULL));
 
-    node_t *org_head=*head , *current=*head;
+    node_t *old_head=*head;
+    node_t  **current=head;
+
     int length=0;
-    int randNum;
-    int count;
-    while (current)
+    // current here to count length of list
+    while (*current)
     {
-        current=current->next;
-        length+=1;
+        current= &(*current)->next;
+        length++;
     }
     // length為list的長度
     *head=NULL;
-    for(int i=0; i < length ; i++){
-        randNum=rand()%(length-i)+1;
-        count=1;
-        current=org_head;
-        if(randNum==1){ 
-            org_head=org_head->next;
-            current->next=(*head);
-            *head =current;
-            continue;
+    
+    for( ; length>0 ; length--){
+        // current here to trace old head of list 
+        current = &old_head;
+        node_t *tmp;
+        int index = rand() % length-1;
+        if(index == -1){
+            tmp=*current;
+            if(tmp->next!=NULL)
+                old_head=tmp->next;
+            tmp->next = *head;
+            *head = tmp;
         }
         else
         {
-            while (current)
-            {
-                if(count+1==randNum){
-                    node_t *tmp=current->next;
-                    current->next=current->next->next;
-                    tmp->next=(*head);
-                    *head=tmp;
-                    break;
-                }
-                else
-                {
-                    count+=1;
-                    current= current->next;
-                } 
-            }
+            for(; index > 0; index--)
+                current= &(*current)->next;
+
+            tmp = (*current)->next;
+            if((*current)->next->next !=NULL)
+                (*current)->next=(*current)->next->next;
+            else
+               (*current)->next=NULL;
+            tmp->next = *head;
+            *head = tmp;
         }
     }
 }
