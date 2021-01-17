@@ -9,7 +9,7 @@ node_t *recursive_reverse(node_t *head)
     head->next = NULL;// 將原本的list變為 a->b->c  和 d->c
     return recursive_head; // 保留d的位址
 }
-void reverse(node_t **head)
+void reverse_recur(node_t **head)
 {
     *head = recursive_reverse(*head);
 }
