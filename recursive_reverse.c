@@ -1,15 +1,31 @@
-node_t *recursive_reverse(node_t *head)
-{
-    //當list為空或list遞迴到只剩一個的時候 即回傳
-    if(!head || !head->next){
-        return head;
+#include<stdio.h>
+typedef struct __node {
+    int value;
+    struct __node *next;
+} node_t;
+
+void recursive_reverse_step(node_t *curr, node_t *prev, node_t **head)
+{ 
+    /* next represent the element behind the current element in the list 
+     * if next equal to NULL , then the element we traced is last in the list 
+     */
+    node_t *next = curr->next;
+    if (!next) {        
+        *head = curr;
+        return; 
     }
-    node_t *recursive_head = recursive_reverse(head->next);//recursive_head 被初始化為list的尾巴(後面一直沒有更新過)
-    (head->next)->next = head; // a->b->c->d  變成 a->b->c->d->c
-    head->next = NULL;// 將原本的list變為 a->b->c  和 d->c
-    return recursive_head; // 保留d的位址
-}
-void reverse_recur(node_t **head)
+    /*  prev represent the previous recursive function parameter curr
+     *  it should be linked behind the current element 
+     */ 
+    curr->next = prev;    
+    
+    recursive_rev_step(next, curr, head);
+} 
+
+void recursive_reverse(node_t **head)
 {
-    *head = recursive_reverse(*head);
+    if (!head)
+        return;
+
+    recursive_reverse_step(*head, NULL, head);
 }
