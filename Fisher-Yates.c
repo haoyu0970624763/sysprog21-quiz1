@@ -1,44 +1,47 @@
-void random_sort(node_t **head){
+#include <stdio.h>
 
+void shuffle(node_t **head)
+{
     srand(time(NULL));
-
-    node_t *old_head=*head;
-    node_t  **current=head;
-
-    int length=0;
-    // current here to count length of list
-    while (*current)
-    {
-        current= &(*current)->next;
-        length++;
-    }
-    // length為list的長度
-    *head=NULL;
     
-    for( ; length>0 ; length--){
-        // current here to trace old head of list 
-        current = &old_head;
-        node_t *tmp;
-        int index = rand() % length-1;
-        if(index == -1){
-            tmp=*current;
-            if(tmp->next!=NULL)
-                old_head=tmp->next;
-            tmp->next = *head;
-            *head = tmp;
-        }
-        else
-        {
-            for(; index > 0; index--)
-                current= &(*current)->next;
+    /* Trace the length of the linked list */
+    int len = 0;
+    node_t **indirect = head;
+    while (*indirect) {
+        len++;
+        indirect = &(*indirect)->next;
+    }   
 
-            tmp = (*current)->next;
-            if((*current)->next->next !=NULL)
-                (*current)->next=(*current)->next->next;
-            else
-               (*current)->next=NULL;
-            tmp->next = *head;
-            *head = tmp;
+    /* Append shuffling result to another linked list */
+    node_t *new = NULL;
+    node_t **new_head = &new;
+    node_t **new_tail = &new;
+
+    while (len) {
+        int random = rand() % len;
+        indirect = head;
+
+        while (random--)
+            indirect = &(*indirect)->next;
+
+        /* tmp means the node we randomly chosen */
+        node_t *tmp = *indirect;
+        /* Shift the element behind tmp to the position of tmp */
+        *indirect = (*indirect)->next;
+        /* put the node we chosen to the tail of new list */
+        tmp->next = NULL;
+
+        if (new) {
+            (*new_tail)->next = tmp;
+            new_tail = &(*new_tail)->next;
+        } else {
+            new = tmp; 
         }
-    }
+        
+
+        len--;
+    }   
+
+    *head = *new_head;
 }
+  
