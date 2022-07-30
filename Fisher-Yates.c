@@ -37,7 +37,6 @@ void shuffle(node_t **head)
         } else {
             new = tmp; 
         }
-        
 
         len--;
     }   
