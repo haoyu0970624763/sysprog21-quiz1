@@ -1,4 +1,12 @@
 #include <stdio.h>
+#include <assert.h>
+#include <time.h>
+#include <stdlib.h>
+
+typedef struct __node {
+  int value;
+  struct __node *next;
+} node_t;
 
 void shuffle(node_t **head)
 {
@@ -42,5 +50,47 @@ void shuffle(node_t **head)
     }   
 
     *head = *new_head;
+}
+
+void add_entry(node_t **head, int new_value)
+{
+    node_t **indirect = head;
+
+    node_t *new_node = malloc(sizeof(node_t));
+    new_node->value = new_value;
+    new_node->next = NULL;
+    
+    /* AA1 = "assert(new_node)" */
+    assert(new_node);
+    while (*indirect)
+        indirect = &(*indirect)->next;
+    /* AA2 = "*indirect = new_node" */
+    *indirect = new_node;
+}
+
+void print_list(node_t *head)
+{
+    for (node_t *current = head; current; current = current->next)
+        printf("%d ", current->value);
+    printf("\n");
+}
+
+int main(int argc, char const *argv[])
+{
+    node_t *head = NULL;
+
+    add_entry(&head, 72);
+    add_entry(&head, 101);
+    add_entry(&head, 108);
+    add_entry(&head, 109);
+    add_entry(&head, 110);
+    add_entry(&head, 111);
+
+    print_list(head);
+
+    shuffle(&head);
+    print_list(head);
+
+    return 0;
 }
   
